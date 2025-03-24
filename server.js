@@ -1,4 +1,5 @@
 require("dotenv").config();
+import path from "path";
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -15,6 +16,13 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
 }).then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
+
+  const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "/client/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+});
 
 // Base route
 app.get("/", (req, res) => {
